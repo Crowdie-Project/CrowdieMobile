@@ -3,26 +3,20 @@ import {View, Text,TextInput, Button, StyleSheet, ScrollView, Alert, Modal, Pres
 import {supabase} from './Supabase.js';
 
 const Login = () => {
-    const [helperText, setHelperText] = useState({ error: null, text: null });
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
-    const handleLogin = async (type) => {
-   
-        const { user, error } =
-            type === "LOGIN"
-                ? await supabase.auth.signIn({ email, password })
-                : await supabase.auth.signUp({ email, password });
-
-        if (error) {
-            setHelperText({ error: true, text: error.message });
-        } else if (!user && !error) {
-            setHelperText({
-                error: false,
-                text: "An email has been sent to you for verification!",
-            });
-        }
-    };
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState('')
+  
+    const handleLogin = async (type: string, email: string, password: string) => {
+      setLoading(type)
+      const { error, user } =
+        type === 'LOGIN'
+          ? await supabase.auth.signIn({ email, password })
+          : await supabase.auth.signUp({ email, password })
+      if (!error && !user) Alert.alert('Check your email for the login link!')
+      if (error) Alert.alert(error.message)
+      setLoading('')
+    }
 
     const handleOAuthLogin = async (provider) => {
         // You need to enable the third party auth you want in Authentication > Settings
@@ -73,24 +67,22 @@ const Login = () => {
                 />
            </View>
          
-            {!!helperText.text && (
-                <Text>
-                    {helperText.text}
-                </Text>
-            )}
             <View>
                     <Pressable
                     style={styles.button}
-                        type="submit"
-                        onPress={() =>
-                            handleLogin("REGISTER").catch(console.error)
-                        }>
+                    title="Sign up"
+                    disabled={!!loading.length}
+                    loading={loading === 'SIGNUP'}
+                    onPress={() => handleLogin('SIGNUP', email, password)}>
                     <Text style={styles.buttonText}>Sign Up</Text>
                     </Pressable>
                 
                     <Pressable
-                     style={styles.button}
-                     onPress={() => handleLogin("LOGIN")}
+                    style={styles.button}
+                      title="Sign in"
+                      disabled={!!loading.length}
+                      loading={loading === 'LOGIN'}
+                      onPress={() => handleLogin('LOGIN', email, password)}
                     >
                         <Text style={styles.buttonText}>Sign In</Text>
                     </Pressable>

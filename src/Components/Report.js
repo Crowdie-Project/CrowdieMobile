@@ -12,7 +12,7 @@ import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-
 //import { createClient } from '@supabase/supabase-js';
 
 //const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_KEY);
-//import {supabase} from './Supabase.js';
+import {supabase} from './Supabase';
 
 //MODULE IMPORTS
 import Navig from "./Nav";
@@ -36,74 +36,74 @@ const navig = new Navig();
 const geoLoc = navig.getLocation();                                        //Location doesn't update until user clicks to allow location services button           
 
 
-  const [errorText, setError] = useState("");
+//const [errorText, setError] = useState("");
 
 
   const [selectedCategory, setSelectedCategory] = useState();
   const [Events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState();
-  const [waiting, setWaiting] = useState();
+ // const [waiting, setWaiting] = useState();
   //const eventTypes = {"doğal afetler": "101", "yangın": "102", "sosyal anket":"103"};
  
-//   const addReport = async () => {
+  const addReport = async () => {
 
-//    //if selected item is "seçiniz", user cannot submit report.
-//    if (!selectedEvent){
-//      alert('ERROR: No report specified.');
-//      return;
-//    }
+   //if selected item is "seçiniz", user cannot submit report.
+   if (!selectedEvent){
+   //  alert('ERROR: No report specified.');
+     return;
+   }
 
-//    if (waiting){
-//      alert("Hold up! You just submitted a report a few minutes ago. News isn't that fast!");
-//      return;
-//    }
+  //  if (waiting){
+  //    alert("Hold up! You just submitted a report a few minutes ago. News isn't that fast!");
+  //    return;
+  //  }
 
    
-//    if (geoLoc[0]==-999){
-//      alert('ERROR: Unable to submit report, location access is off! To submit reports, please enable location access on your device.');
-//      return;
-//    }
+   if (geoLoc[0]==-999){
+     alert('ERROR: Unable to submit report, location access is off! To submit reports, please enable location access on your device.');
+     return;
+   }
 
-//     const { data: report, error } = await supabase
-//     .from('TestReports')
-//     .insert({ CODE: selectedEvent, LAT: geoLoc[1], LON: geoLoc[0], CategoryCode: selectedCategory})
-//     .single();
-//     if (error) setError(error.message);
-//     else {
-//         setReports([report, ...reports]);
-//         setError(null);
+    const { data: report, error } = await supabase
+    .from('TestReports')
+    .insert({ CODE: selectedEvent, LAT: geoLoc[1], LON: geoLoc[0], CategoryCode: selectedCategory})
+    .single();
+    if (error) setError(error.message);
+    else {
+        setReports([report, ...reports]);
+        setError(null);
   
-//     }
+    }
 
-//     setSelectedCategory(null)
-//     setSelectedEvent(null)
-//     setWaiting(true)
+    setSelectedCategory(null)
+    setSelectedEvent(null)
+    //setWaiting(true)
 
-//     //TODO:
-//     //MOVE THIS TO SERVERSIDE AND RANDOMIZE THE WAITTIME
-//     //TO MAKE EVENT-TIME-USER ASSOCIATIONS UNRELIABLE
-//     setTimeout(function(){ setWaiting(false) }, 300000);
-//     //setTimeout(function(){ setWaiting(false) }, 1000);
-//     setModalVisible(!modalVisible)
-//   };
-
-
-// useEffect(() => {
-//     fetchEvents().catch(console.error);
-// },[selectedCategory,selectedType]);
+    //TODO:
+    //MOVE THIS TO SERVERSIDE AND RANDOMIZE THE WAITTIME
+    //TO MAKE EVENT-TIME-USER ASSOCIATIONS UNRELIABLE
+   // setTimeout(function(){ setWaiting(false) }, 300000);
+    //setTimeout(function(){ setWaiting(false) }, 1000);
+    setModalVisible(!modalVisible)
+  };
 
 
-  // const fetchEvents = async () => {
+useEffect(() => {
+    fetchEvents().catch(console.error);
+},[selectedCategory,selectedType]);
+
+
+  const fetchEvents = async () => {
     
-  //   let { data: Events, error } = await supabase
-  //         .from('EventCategories')
-  //         .select("*")
-  //         // Filters
-  //         .eq('ParentCode', selectedCategory)
-  //         .eq('Type', selectedType)
-  //         if (error) console.log("error", error);
-  //         else setEvents(Events);
-  // }; 
+    let { data: Events, error } = await supabase
+          .from('EventCategories')
+          .select("*")
+          // Filters
+          .eq('ParentCode', selectedCategory)
+          .eq('Type', selectedType)
+          if (error) console.log("error", error);
+          else setEvents(Events);
+  }; 
 
   const closeReport = () => {
     setSelectedCategory(null)

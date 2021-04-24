@@ -3,19 +3,19 @@
 //IMPORTS
 import React, {useEffect, useState} from 'react';
 import { StyleSheet, View,ScrollView,Text,Pressable } from 'react-native';
-import {supabase} from './Components/Supabase.js';
+//import {supabase} from './Components/Supabase.js';
 import Home from './Components/Home';
-import Login from './Components/Login';
+//import Login from './Components/Login';
 
- //import BackgroundTimer from 'react-native-background-timer';
- import { YellowBox } from "react-native";
+//import BackgroundTimer from 'react-native-background-timer';
+ import { LogBox } from "react-native";
  import _ from "lodash";
 
 
 //MAIN
 
 export default function App() {
-  YellowBox.ignoreWarnings(["Setting a timer"]);
+  LogBox.ignoreLogs(["Setting a timer"]);
 const _console = _.clone(console);
 console.warn = (message) => {
 if (message.indexOf("Setting a timer") <= -1) {
@@ -23,32 +23,32 @@ _console.warn(message);
 }
 };
 
-//   setTimeout = BackgroundTimer.setTimeout.bind(BackgroundTimer)
+// setTimeout = BackgroundTimer.setTimeout.bind(BackgroundTimer)
 // setInterval = BackgroundTimer.setInterval.bind(BackgroundTimer)
 // clearTimeout = BackgroundTimer.clearTimeout.bind(BackgroundTimer)
 // clearInterval = BackgroundTimer.clearInterval.bind(BackgroundTimer)
 
-  const [user, setUser] = useState(null);
+  //  const [user, setUser] = useState(null);
 
-    useEffect(() => {
-        const session = supabase.auth.session();
-        setUser(session?.user ?? null);
+  //   useEffect(() => {
+  //       const session = supabase.auth.session();
+  //       setUser(session?.user ?? null);
 
-        const { data: authListener } = supabase.auth.onAuthStateChange(
-            async (event, session) => {
-                const currentUser = session?.user;
-                setUser(currentUser ?? null);
-            }
-        );
+  //       const { data: authListener } = supabase.auth.onAuthStateChange(
+  //           async (event, session) => {
+  //               const currentUser = session?.user;
+  //               setUser(currentUser ?? null);
+  //           }
+  //       );
 
-        return () => {
-            authListener?.unsubscribe();
-        };
-    }, [user]);
+  //       return () => {
+  //           authListener?.unsubscribe();
+  //       };
+  //   }, [user]);
 
   return (
       <View style={styles.container}>
-      {user ? <Login/> :<Home user={user}/>}   
+      <Home/> 
       </View>
 
   );

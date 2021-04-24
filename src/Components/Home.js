@@ -4,127 +4,128 @@ import { StyleSheet, View,ScrollView,Text,Pressable } from 'react-native';
 import Report from './Report';
 import {supabase} from './Supabase.js';
 import MapEditor from './MapEditor';
-import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 
 
 
 
 
-const Home = ({user}) => {
-var reportone = {
-    id:"1",
-    LAT:41.85,
-    LON:29.68,
-    CODE:1402,
-    CategoryCode:1400
-};
-var reporttwo = {
-  id:"2",
-  LAT:41.54,
-  LON:30.64,
-  CODE:1502,
-  CategoryCode:1500
-};
 
-var colorone = {
-id:1,
-HexCode: "#002ABF",
-CategoryCode: 1400
-};
-var colortwo = {
-id:2,
-HexCode: "#00EB96",
-CategoryCode: 1500
-};
+const Home = () => {
+// var reportone = {
+//     id:1,
+//     LAT: 41.8,
+//     LON: 29.6,
+//     CODE:1402,
+//     CategoryCode:1400
+// };
+// var reporttwo = {
+//   id: 2,
+//   LAT: 41.5,
+//   LON: 30.6,
+//   CODE: 1502,
+//   CategoryCode:1500
+// };
 
-var catone = {
-id: 1,
-Parent: "*",
-Child: "Natural Disaster",
-Type: 0,
-ParentCode: 0,
-ChildCode: 1400
-};
-var cattwo = {
-id: 2,
-Parent: "*",
-Child: "Natural Generic Urban Problem",
-Type: 0,
-ParentCode: 0,
-ChildCode: 1500
-};
-    const reports = [reportone,reporttwo];
-    const EventCategories = [catone,cattwo];
-    const Colors = [colorone,colortwo];
+// var colorone = {
+// id:1,
+// HexCode: "#002ABF",
+// CategoryCode: 1400
+// };
+// var colortwo = {
+// id:2,
+// HexCode: "#00EB96",
+// CategoryCode: 1500
+// };
+
+// var catone = {
+// id: 1,
+// Parent: "*",
+// Child: "Natural Disaster",
+// Type: 0,
+// ParentCode: 0,
+// ChildCode: 1400
+// };
+// var cattwo = {
+// id: 2,
+// Parent: "*",
+// Child: "Natural Generic Urban Problem",
+// Type: 0,
+// ParentCode: 0,
+// ChildCode: 1500
+// };
+    const [reports, setReports] = useState([]);
+    const [EventCategories, setEventCategories] = useState([]);
+    const [Colors, setColors] = useState([]);
     const [selectedFilter, setFilter] = useState([]);
     
    
-//     useEffect(() => {
+    useEffect(() => {
     
-//       // let url = window.location.hash;
-//       // let query = url.substr(1);
-//       // let result = {};
+      // let url = window.location.hash;
+      // let query = url.substr(1);
+      // let result = {};
   
-//       // query.split("&").forEach((part) => {
-//       //     const item = part.split("=");
-//       //     result[item[0]] = decodeURIComponent(item[1]);
-//       // });
+      // query.split("&").forEach((part) => {
+      //     const item = part.split("=");
+      //     result[item[0]] = decodeURIComponent(item[1]);
+      // });
   
-//       // if (result.type === "recovery") {
-//       //     setRecoveryToken(result.access_token);
-//       // }
+      // if (result.type === "recovery") {
+      //     setRecoveryToken(result.access_token);
+      // }
   
-//       fetchReports().catch(console.error);
-//   }, [selectedFilter]);
+      fetchReports();
+  }, []);
   
-//     const fetchReports = async () => {
-//       let { data: reports, error } = await supabase
-//           .from("TestReports")
-//           .select("*")
-//           .in('CategoryCode', selectedFilter)
-//           .order("id", { ascending: false });
-//       if (error) console.log("error", error);
-//       else setReports(reports);
-//   };
+    const fetchReports = async () => {
+      let { data: reports, error } = await supabase
+          .from("TestReports")
+          .select("*")
+       //   .in('CategoryCode', selectedFilter)
+          .order("id", { ascending: false });
+      if (error) console.log("error", error);
+      else setReports(reports);
+      console.log(reports)
+  };
   
   
-//   useEffect(() => {
-//     fetchMainCategories().catch(console.error);
-//   },[]);
+  useEffect(() => {
+    fetchMainCategories().catch(console.error);
+  },[]);
   
-//   const fetchMainCategories = async () => {
+  const fetchMainCategories = async () => {
       
-//     let { data: EventCategories, error } = await supabase
-//           .from('EventCategories')
-//           .select("*")
-//           // Filters
-//           .eq('ParentCode', '0')
-//           if (error) console.log("error", error);
-//           else setEventCategories(EventCategories);
-//   };
+    let { data: EventCategories, error } = await supabase
+          .from('EventCategories')
+          .select("*")
+          // Filters
+          .eq('ParentCode', '0')
+          if (error) console.log("error", error);
+          else setEventCategories(EventCategories);
+  };
   
-//   useEffect(() => {
-//     fetchCategoryColors().catch(console.error);
-//   },[]);
+  useEffect(() => {
+    fetchCategoryColors().catch(console.error);
+  },[]);
   
-//   const fetchCategoryColors = async () => {
+  const fetchCategoryColors = async () => {
       
-//     let { data: Colors, error } = await supabase
-//           .from('ColorCodes')
-//           .select("*")
-//           if (error) console.log("error", error);
-//           else setColors(Colors);
-//         let defaultFilter = Colors.map((color) => color.CategoryCode)  
-//         setFilter(defaultFilter)
-//   };
+    let { data: Colors, error } = await supabase
+          .from('ColorCodes')
+          .select("*")
+          if (error) console.log("error", error);
+          else setColors(Colors);
+        let defaultFilter = Colors.map((color) => color.CategoryCode)  
+        setFilter(defaultFilter)
+  };
   
-//   const filterSelected = (newFilter) => {
-//     if (selectedFilter == newFilter){
-//       setFilter(Colors.map((color) => color.CategoryCode))
-//     }else{
-//       setFilter([newFilter])
-//     }
-//   }
+  const filterSelected = (newFilter) => {
+    if (selectedFilter == newFilter){
+      setFilter(Colors.map((color) => color.CategoryCode))
+    }else{
+      setFilter([newFilter])
+    }
+  }
 
   const handleLogout = async () => {
     supabase.auth.signOut().catch(console.error);
@@ -132,12 +133,12 @@ ChildCode: 1500
 
     return (
         <View style={styles.container}>
-      {/* <Report
+      <Report
            reports={reports}
            setReports={setReports}
            EventCategories={EventCategories}
            setEventCategories={setEventCategories}
-         /> */}
+         />
        <View style={styles.reportWrapper}>
                  <Text style={styles.header}>Reported Events</Text>
                    <ScrollView style={styles.scrollview}>
